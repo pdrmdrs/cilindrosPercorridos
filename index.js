@@ -132,13 +132,13 @@ const SCAN_SOBE = () => {
 
     let value = !hasReachedMinPosition ? findNextMin(order[i], partialOrder) : findNextMax(order[i], partialOrder);
 
-    if(value === -1) {
+    if(!value) {
       hasReachedMinPosition = !hasReachedMinPosition;
 
       value = findNextMax(order[i], partialOrder);
     }
 
-    if (value > -1) {
+    if (value) {
       order.push(value);
       // partialOrder.splice(partialOrder.indexOf(value), 1);
     }
