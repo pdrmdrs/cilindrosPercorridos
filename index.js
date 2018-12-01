@@ -73,33 +73,26 @@ const FCFS = () => {
  * SSTF scheduling algorithm
  */
 const SSTF = () => {
-
-  const findShortestToSeek = (actual = 0, queue = [], positionToStart = 0) => {
-    let shortestToSeekIndex = -1;
-
-    let distance = -1;
-
-    for(let i = positionToStart; i < queue.length; i++) {
-
-      let newDistance = (actual - queue[i]);
-
-      if(newDistance < 0) {
-        newDistance = newDistance * (-1);
-      }
-
-      if(newDistance > distance) {
-        shortestToSeekIndex = i;
-        distance = newDistance;
-      }
-    }
-
-    return queue[shortestToSeekIndex];
-  };
-
   const order = [config.initialPosition];
 
   for(let i = 0; i < config.waitQueue.length; i++) {
-    order.push(findShortestToSeek(order[i], config.waitQueue, i));
+    let distance = -1;
+    let minorIndex = config.waitQueue.length - 1;
+
+    for(let j = i + 1; j < config.waitQueue.length; j++) {
+      let d = config.waitQueue[j] - config.waitQueue[i];
+
+      if (d < 0) d = d * (-1);
+
+      distance = (d < distance ? d : distance);
+      minorIndex = j;
+    }
+
+    order.push(config.waitQueue[minorIndex]);
+
+    config.waitQueue.splice(minorIndex, 1);
+
+    console.log(config.waitQueue);
   }
 
   const cilinders = countCilinders(order);;
