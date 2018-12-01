@@ -64,7 +64,7 @@ const runSchedulingAlgorithms = () => {
  */
 const FCFS = () => {
   const order = [config.initialPosition, ...config.waitQueue];
-  const cilinders = 0;
+  const cilinders = countCilinders(order);
 
   printSchedulingAlgorithm('FCFS', order, cilinders);
 };
@@ -73,8 +73,36 @@ const FCFS = () => {
  * SSTF scheduling algorithm
  */
 const SSTF = () => {
+
+  const findShortestToSeek = (actual = 0, queue = [], positionToStart = 0) => {
+    let shortestToSeekIndex = -1;
+
+    let distance = -1;
+
+    for(let i = positionToStart; i < queue.length; i++) {
+
+      let newDistance = (actual - queue[i]);
+
+      if(newDistance < 0) {
+        newDistance = newDistance * (-1);
+      }
+
+      if(newDistance > distance) {
+        shortestToSeekIndex = i;
+        distance = newDistance;
+      }
+    }
+
+    return queue[shortestToSeekIndex];
+  };
+
   const order = [config.initialPosition];
-  const cilinders = 0;
+
+  for(let i = 0; i < config.waitQueue.length; i++) {
+    order.push(findShortestToSeek(order[i], config.waitQueue, i));
+  }
+
+  const cilinders = countCilinders(order);;
 
   printSchedulingAlgorithm('SSTF', order, cilinders);
 };
@@ -98,6 +126,23 @@ const SCAN_DESCE = () => {
 
   printSchedulingAlgorithm('SCAN_DESCE', order, cilinders);
 };
+
+const countCilinders = (order = []) => {
+
+  let cilinders = 0;
+
+  for(let i = 1; i < order.length; i++) {
+    let cilinderStep = (order[i] - order[i - 1]);
+
+    if (cilinderStep < 0) {
+      cilinderStep = cilinderStep * (-1);
+    } 
+
+    cilinders += cilinderStep;
+  }
+
+  return cilinders;
+}
 
 
 const printSchedulingAlgorithm = (name = '', order = [], cilinders = '') => {
