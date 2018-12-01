@@ -73,29 +73,45 @@ const FCFS = () => {
  * SSTF scheduling algorithm
  */
 const SSTF = () => {
-  const order = [config.initialPosition];
 
-  for(let i = 0; i < config.waitQueue.length; i++) {
-    let distance = -1;
-    let minorIndex = config.waitQueue.length - 1;
+  const partialOrder = [...config.waitQueue];
+  
+  const order = [];
 
-    for(let j = i + 1; j < config.waitQueue.length; j++) {
-      let d = config.waitQueue[j] - config.waitQueue[i];
+  order.push(config.initialPosition);
 
-      if (d < 0) d = d * (-1);
+  
+  for(let i = 0; i < config.waitQueueSize; i++) {
 
-      distance = (d < distance ? d : distance);
-      minorIndex = j;
+    let minorDistance = null;
+    let nextToSeek = null;
+
+    for(let j = 0; j < partialOrder.length; j++) {
+      
+      let d = order[i] - partialOrder[j];
+      
+      if (d < 0) {
+        d = d * (-1);
+      }
+
+      if (!minorDistance || d < minorDistance) {
+        minorDistance = d;
+        nextToSeek = partialOrder[j];
+      }
+      
     }
 
-    order.push(config.waitQueue[minorIndex]);
+    order.push(nextToSeek);
 
-    config.waitQueue.splice(minorIndex, 1);
+    const indexOfNextToSeek = partialOrder.indexOf(nextToSeek);
 
-    console.log(config.waitQueue);
+    if (indexOfNextToSeek > -1) {
+      partialOrder.splice(indexOfNextToSeek, 1);
+    }
+
   }
 
-  const cilinders = countCilinders(order);;
+  const cilinders = countCilinders(order);
 
   printSchedulingAlgorithm('SSTF', order, cilinders);
 };
