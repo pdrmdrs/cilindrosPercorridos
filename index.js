@@ -8,7 +8,9 @@ const fs = require('fs');
 const config = {
   initialPosition: 0,
   waitQueueSize: 0,
-  waitQueue: []
+  waitQueue: [],
+  minSector: 0,
+  maxSector: 199
 };
 
 /**
@@ -42,9 +44,9 @@ const readConfigFile = (fileName = '') => {
  */
 const populateConfig = (lines = []) => {
   Object.assign(config, {
-    initialPosition: lines[0].trim('\r'),
-    waitQueueSize: lines[1].trim('\r'),
-    waitQueue: lines[2].split(' ')
+    initialPosition: parseInt(lines[0].trim('\r')),
+    waitQueueSize: parseInt(lines[1].trim('\r')),
+    waitQueue: lines[2].split(' ').map(Number)
   });
 };
 
@@ -121,7 +123,28 @@ const SSTF = () => {
  */
 const SCAN_SOBE = () => {
   const order = [config.initialPosition];
-  const cilinders = 0;
+
+  const partialOrder = [config.initialPosition, ...config.waitQueue];
+
+  let hasReachedMinPosition = false;
+
+  for(let i = 0; i < config.waitQueue.length; i++) {
+
+    let value = !hasReachedMinPosition ? findNextMin(order[i], partialOrder) : findNextMax(order[i], partialOrder);
+
+    if(value === -1) {
+      hasReachedMinPosition = !hasReachedMinPosition;
+
+      value = findNextMax(order[i], partialOrder);
+    }
+
+    if (value > -1) {
+      order.push(value);
+      // partialOrder.splice(partialOrder.indexOf(value), 1);
+    }
+  }
+
+  const cilinders = countCilinders(order);
 
   printSchedulingAlgorithm('SCAN_SOBE', order, cilinders);
 };
@@ -131,9 +154,32 @@ const SCAN_SOBE = () => {
  */
 const SCAN_DESCE = () => {
   const order = [config.initialPosition];
-  const cilinders = 0;
+
+
+
+  const cilinders = countCilinders(order);
 
   printSchedulingAlgorithm('SCAN_DESCE', order, cilinders);
+};
+
+const findNextMin = (value = 0, array = []) => {
+  const sortedArray = array.sort((a, b) => a-b);
+
+  const index = sortedArray.indexOf(parseInt(value));
+
+  const nextMin = sortedArray[index - 1];
+
+  return nextMin;
+};
+
+const findNextMax = (value = 0, array = []) => {
+  const sortedArray = array.sort((a, b) => a-b);
+
+  const index = sortedArray.indexOf(parseInt(value));
+
+  const nextMax = sortedArray[index + 1];
+
+  return nextMax;
 };
 
 const countCilinders = (order = []) => {
