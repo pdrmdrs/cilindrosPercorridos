@@ -155,10 +155,26 @@ const SCAN_SOBE = () => {
 const SCAN_DESCE = () => {
   const order = [config.initialPosition];
 
+  const partialOrder = [config.initialPosition, ...config.waitQueue];
 
+  let hasReachedMaxPosition = false;
+
+  for(let i = 0; i < config.waitQueue.length; i++) {
+
+    let value = !hasReachedMaxPosition ? findNextMax(order[i], partialOrder) : findNextMin(order[i], partialOrder);
+
+    if(!value) {
+      hasReachedMaxPosition = !hasReachedMaxPosition;
+
+      value = findNextMin(order[i], partialOrder);
+    }
+
+    if (value) {
+      order.push(value);
+    }
+  }
 
   const cilinders = countCilinders(order);
-
   printSchedulingAlgorithm('SCAN_DESCE', order, cilinders);
 };
 
