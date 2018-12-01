@@ -20,9 +20,17 @@ Projeto da disciplina Sistemas Operacionais com o objetivo de solucionar a segui
 
 #### 4) SCAN considerando o bit de sentido como DESCE (indo do maior para o menor cilindro)
 
-O programa deve receber como parâmetro (utilizando argc argv, por exemplo) o nome de um arquivo de configuração. Este arquivo contém as seguintes informações: • Um inteiro com a posição inicial do cabeçote • Um inteiro n que determina o tamanho da fila de espera • n inteiros que são a fila de espera O programa deve ler o arquivo de configuração e, para cada algoritmo de escalonamento, imprimir na tela: 1) A ordem da fila de espera acessada 2) O total de cilindros percorridos
+O programa deve receber como parâmetro (utilizando argc argv, por exemplo) o nome de um arquivo de configuração. Este arquivo contém as seguintes informações: 
 
-Exemplo de arquivo de configuração:
+• Um inteiro com a posição inicial do cabeçote 
+
+• Um inteiro n que determina o tamanho da fila de espera 
+
+• n inteiros que são a fila de espera O programa deve ler o arquivo de configuração e, para cada algoritmo de escalonamento, imprimir na tela: 
+  1) A ordem da fila de espera acessada 
+  2) O total de cilindros percorridos
+
+### Exemplo de arquivo de configuração:
 
 > ### 53
 >
