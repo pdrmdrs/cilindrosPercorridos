@@ -140,7 +140,7 @@ const SCAN_SOBE = () => {
 
     if (value) {
       order.push(value);
-      // partialOrder.splice(partialOrder.indexOf(value), 1);
+      partialOrder.splice(partialOrder.indexOf(value), 1);
     }
   }
 
@@ -171,7 +171,7 @@ const SCAN_DESCE = () => {
 
     if (value) {
       order.push(value);
-      // partialOrder.splice(partialOrder.indexOf(value), 1);
+      partialOrder.splice(partialOrder.indexOf(value), 1);
     }
   }
 
